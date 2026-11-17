@@ -36,7 +36,9 @@ function withLock(fn) {
       fs.closeSync(fs.openSync(LOCK_FILE, 'wx'))
       break
     } catch (e) {
-      if (e.code !== 'EEXIST') throw e
+      // Windows reports EPERM/EACCES/EBUSY instead of EEXIST while another process is
+      // still deleting the lock file — that is contention too, not a failure.
+      if (!['EEXIST', 'EPERM', 'EACCES', 'EBUSY'].includes(e.code)) throw e
       try {
         if (Date.now() - fs.statSync(LOCK_FILE).mtimeMs > LOCK_STALE_MS) { fs.unlinkSync(LOCK_FILE); continue }
       } catch { continue } // lock vanished between open and stat — retry now
@@ -66,7 +68,7 @@ function writeBoard(b) {
   // Windows briefly refusing the rename while a reader has the file open.
   const tmp = BOARD_FILE + '.' + process.pid + '.tmp'
   let lastErr
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < 20; i++) {
     try {
       fs.writeFileSync(tmp, JSON.stringify(b, null, 2))
       fs.renameSync(tmp, BOARD_FILE)

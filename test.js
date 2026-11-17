@@ -91,6 +91,7 @@ const check = (label, cond) => { console.log(`  ${cond ? 'PASS' : 'FAIL'}  ${lab
     p.stdin.end(calls + '\n')
   })))
   let wins = 0, refusals = 0
+  for (const o of racers) for (const m of o.match(/ERROR: [^"]*/g) || []) console.log('  race call error ->', m)
   for (const o of racers) { wins += (o.match(/"claimed \\"race:/g) || []).length; refusals += (o.match(/ALREADY CLAIMED/g) || []).length }
   check(`${N} processes race for 25 topics -> exactly 25 winners (got ${wins} won, ${refusals} refused)`, wins === 25 && refusals === 25 * (N - 1))
   check('no lock file left behind', !fs.existsSync(TEST_BOARD + '.lock'))
