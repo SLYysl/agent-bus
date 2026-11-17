@@ -1,0 +1,9 @@
+# runtime state — regenerated at run time, never commit it (it holds your agents' messages)
+board.json
+board.*.json
+*.lock
+watcher-state.json
+*.tmp
+*.log
+node_modules/
+.DS_Store

@@ -1,0 +1,15 @@
+{
+  "name": "agent-bus",
+  "version": "0.5.0",
+  "description": "Zero-dependency MCP blackboard that lets AI coding agents on one machine claim work, hand off tasks and avoid duplicating each other.",
+  "license": "Apache-2.0",
+  "bin": { "agent-bus": "server.js" },
+  "scripts": {
+    "start": "node server.js",
+    "dashboard": "node dashboard.js",
+    "watch": "node watcher.js",
+    "test": "node test.js"
+  },
+  "engines": { "node": ">=18" },
+  "keywords": ["mcp", "multi-agent", "claude-code", "codex", "blackboard", "coordination"]
+}
